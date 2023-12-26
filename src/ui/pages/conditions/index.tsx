@@ -2,21 +2,19 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Card, Popconfirm, Table } from "antd";
 import { useParams } from "react-router-dom";
 import ConditionsModel from "../../../models/conditions.model";
-import { EnvironmentEnum } from "../../../enums";
 import { ColumnsType } from "antd/es/table";
 import { Condition } from "../../../types/condition.type";
 import Rules from "./partials/rules";
 import { DeleteOutlined } from "@ant-design/icons";
 
 const ConditionsPage = () => {
-  const { projectId, environment } = useParams();
+  const { projectId, environmentId } = useParams();
   const queryClient = useQueryClient();
   const { data: conditions } = useQuery({
-    queryKey: ["conditions", projectId, environment],
+    queryKey: ["conditions", projectId, environmentId],
     queryFn: () =>
       ConditionsModel.getConditions({
-        projectId: projectId as string,
-        environment: environment as EnvironmentEnum,
+        environmentId: environmentId as string,
       }),
   });
   const mutationDeleteCondition = useMutation({
@@ -26,7 +24,7 @@ const ConditionsPage = () => {
   const deleteCondition = async (conditionId: string) => {
     await mutationDeleteCondition.mutateAsync({ conditionId });
     queryClient.invalidateQueries({
-      queryKey: ["conditions", projectId, environment],
+      queryKey: ["conditions", projectId, environmentId],
     });
   };
 
@@ -44,7 +42,7 @@ const ConditionsPage = () => {
             title={"Are you sure you want to delete this condition?"}
             onConfirm={() => deleteCondition(record.id)}
           >
-            <Button size='small' icon={<DeleteOutlined />} danger />
+            <Button size="small" icon={<DeleteOutlined />} danger />
           </Popconfirm>
         );
       },

@@ -5,17 +5,15 @@ import IdentitiesModel from "../../../models/identities.model";
 import { ColumnsType } from "antd/es/table";
 import { Identity } from "../../../types/identity.type";
 import { RightOutlined } from "@ant-design/icons";
-import { EnvironmentEnum } from "../../../enums";
 
 const IdentitiesPage = () => {
-  const { projectId, environment } = useParams();
+  const { projectId, environmentId } = useParams();
   const navigate = useNavigate();
   const { data: identities } = useQuery({
-    queryKey: ["identities", projectId, environment],
+    queryKey: ["identities", projectId, environmentId],
     queryFn: () =>
       IdentitiesModel.getIdentities({
-        projectId: projectId as string,
-        environment: environment as EnvironmentEnum,
+        environmentId: environmentId as string,
       }),
   });
 

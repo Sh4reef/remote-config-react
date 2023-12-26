@@ -21,21 +21,19 @@ import { Parameter } from "../../../types/parameter.type";
 import { useAtom } from "jotai";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import parameterFormDrawerAtom from "../../views/parameter-form-drawer/atom";
-import { EnvironmentEnum } from "../../../enums";
 
 const ParametersPage = () => {
-  const { projectId, environment } = useParams();
+  const { projectId, environmentId } = useParams();
   const [, setCreateParameterDrawerState] = useAtom(parameterFormDrawerAtom);
   const queryClient = useQueryClient();
   const { data: parameters } = useQuery({
-    queryKey: ["parameters", projectId, environment],
+    queryKey: ["parameters", projectId, environmentId],
     queryFn: () =>
       ParametersModel.getParameters({
-        projectId: projectId as string,
-        environment: environment as EnvironmentEnum,
+        environmentId: environmentId as string,
       }),
     placeholderData: keepPreviousData,
-    enabled: !!projectId && !!environment,
+    enabled: !!projectId && !!environmentId,
   });
   const mutationDeleteParameter = useMutation({
     mutationFn: ParametersModel.deleteParameter,
@@ -48,7 +46,7 @@ const ParametersPage = () => {
   const handleDeleteParameter = async (parameterId: string) => {
     await mutationDeleteParameter.mutateAsync({ parameterId });
     queryClient.invalidateQueries({
-      queryKey: ["parameters", projectId, environment],
+      queryKey: ["parameters", projectId, environmentId],
     });
   };
 

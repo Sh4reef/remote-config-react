@@ -22,7 +22,7 @@ import ParametersModel, {
 import getValueTypeField from "../../../helpers";
 
 const ParameterFormDrawer = () => {
-  const { projectId, environment } = useParams();
+  const { projectId, environmentId } = useParams();
   const [state, setState] = useAtom(parameterFormDrawerAtom);
   const [form] = Form.useForm();
   const { open, parameterId } = state;
@@ -72,14 +72,14 @@ const ParameterFormDrawer = () => {
       } else {
         await mutationCreateParameter.mutateAsync({
           projectId: projectId as string,
-          environment: environment as string,
+          environmentId: environmentId as string,
           data: formattedData,
         });
       }
 
       close();
       queryClient.invalidateQueries({
-        queryKey: ["parameters", projectId, environment],
+        queryKey: ["parameters", projectId, environmentId],
       });
     } catch (error) {
       /** Error */

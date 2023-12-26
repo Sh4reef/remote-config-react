@@ -14,6 +14,14 @@ type GetProjectsResponse = {
   projects: Project[];
 };
 
+type GetProjectVariables = {
+  projectId: string;
+};
+
+type GetProjectResponse = {
+  getProject: Project;
+};
+
 class ProjectsModel {
   public static async createProject(variables: CreateProjectVariables) {
     const document = gql`
@@ -21,6 +29,10 @@ class ProjectsModel {
         createProject(name: $name) {
           id
           name
+          environments {
+            id
+            name
+          }
         }
       }
     `;
@@ -38,6 +50,10 @@ class ProjectsModel {
         projects {
           id
           name
+          environments {
+            id
+            name
+          }
         }
       }
     `;
@@ -45,6 +61,28 @@ class ProjectsModel {
     const result = await client.request<GetProjectsResponse>(document);
 
     return result.projects;
+  }
+
+  public static async getProject(variables: GetProjectVariables) {
+    const document = gql`
+      query GetProject($projectId: String!) {
+        getProject(projectId: $projectId) {
+          id
+          name
+          environments {
+            id
+            name
+          }
+        }
+      }
+    `;
+
+    const result = await client.request<
+      GetProjectResponse,
+      GetProjectVariables
+    >(document, variables);
+
+    return result.getProject;
   }
 }
 

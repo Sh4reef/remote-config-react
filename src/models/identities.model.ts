@@ -1,11 +1,9 @@
 import { gql } from "graphql-request";
 import { Identity } from "../types/identity.type";
 import { client } from "../client";
-import { EnvironmentEnum } from "../enums";
 
 type GetIdentitiesVariables = {
-  projectId: string;
-  environment: EnvironmentEnum;
+  environmentId: string;
 };
 
 type GetIdentitiesResponse = {
@@ -23,8 +21,8 @@ type GetIdentityResponse = {
 class IdentitiesModel {
   public static async getIdentities(variables: GetIdentitiesVariables) {
     const document = gql`
-      query Identities($projectId: String!, $environment: EnvironmentEnum!) {
-        identities(projectId: $projectId, environment: $environment) {
+      query Identities($environmentId: String!) {
+        identities(environmentId: $environmentId) {
           id
           identity
         }

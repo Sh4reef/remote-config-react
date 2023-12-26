@@ -1,11 +1,9 @@
 import { gql } from "graphql-request";
 import { client } from "../client";
 import { Condition } from "../types/condition.type";
-import { EnvironmentEnum } from "../enums";
 
 type GetConditionsVariables = {
-  projectId: string;
-  environment: EnvironmentEnum;
+  environmentId: string;
 };
 
 type GetConditionsResponse = {
@@ -23,11 +21,10 @@ type DeleteConditionResponse = {
 class ConditionsModel {
   public static async getConditions(variables: GetConditionsVariables) {
     const document = gql`
-      query Conditions($projectId: String!, $environment: EnvironmentEnum!) {
-        conditions(projectId: $projectId, environment: $environment) {
+      query Conditions($environmentId: String!) {
+        conditions(environmentId: $environmentId) {
           id
           name
-          projectId
           rules {
             id
             datetime
@@ -38,7 +35,6 @@ class ConditionsModel {
             platform
             rule
           }
-          anotherEnvironmentConditionId
         }
       }
     `;

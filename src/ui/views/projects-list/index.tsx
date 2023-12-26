@@ -22,7 +22,9 @@ const ProjectsList = () => {
             actions={[
               <SettingOutlined
                 key="setting"
-                onClick={() => navigate(`/${item.id}/development/parameters`)}
+                onClick={() =>
+                  navigate(`/${item.id}/${item.environments[0].id}/parameters`)
+                }
               />,
             ]}
           />

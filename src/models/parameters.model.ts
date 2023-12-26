@@ -1,11 +1,9 @@
 import { gql } from "graphql-request";
 import { client } from "../client";
 import { Parameter } from "../types/parameter.type";
-import { EnvironmentEnum } from "../enums";
 
 type GetParametersVariables = {
-  projectId: string;
-  environment: EnvironmentEnum;
+  environmentId: string;
 };
 
 type GetParametersResponse = {
@@ -35,7 +33,7 @@ export type ParameterDataVariable = {
 
 type CreateParameterVariables = {
   projectId: string;
-  environment: string;
+  environmentId: string;
   data: ParameterDataVariable;
 };
 
@@ -69,8 +67,8 @@ type DeleteParameterResponse = {
 class ParametersModel {
   public static async getParameters(variables: GetParametersVariables) {
     const document = gql`
-      query Parameters($projectId: String!, $environment: EnvironmentEnum!) {
-        parameters(projectId: $projectId, environment: $environment) {
+      query Parameters($environmentId: String!) {
+        parameters(environmentId: $environmentId) {
           id
           parameter
           value_type
@@ -95,13 +93,13 @@ class ParametersModel {
     const document = gql`
       mutation CreateParameter(
         $projectId: String!
+        $environmentId: String!
         $data: ParameterInputType!
-        $environment: EnvironmentEnum!
       ) {
         createParameter(
           projectId: $projectId
+          environmentId: $environmentId
           data: $data
-          environment: $environment
         ) {
           id
           parameter
